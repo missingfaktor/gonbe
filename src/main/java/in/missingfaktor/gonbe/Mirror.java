@@ -220,8 +220,7 @@ public abstract class Mirror<A> {
           });
         }
       };
-      Option<java.lang.reflect.Method> match = exactMatch.orElse(bestMatch);
-      return match;
+      return exactMatch.orElse(bestMatch);
     }
 
     public final ObjectMirror callM(Object... args) {
