@@ -11,6 +11,14 @@ groupId = 'in.missingfaktor'
 artifactId = 'gonbe'
 version = '0.0.1-SNAPSHOT'
 
+install.repositories.mavenInstaller.pom.whenConfigured { pom ->
+    pom.project {
+        groupId = project.groupId
+        artifactId = project.artifactId
+        version = project.version
+    }
+}
+
 dependencies {
     compile 'org.functionaljava:functionaljava:3.0'
 
@@ -18,5 +26,5 @@ dependencies {
 }
 
 test {
-  testLogging.showStandardStreams = true
+    testLogging.showStandardStreams = true
 }
