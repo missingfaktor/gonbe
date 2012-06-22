@@ -4,7 +4,6 @@ import fj.F;
 import fj.data.Array;
 import fj.data.Option;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Member;
 import java.util.Arrays;
 
@@ -31,22 +30,22 @@ public final class ClassMirror extends Mirror<Class<?>> {
     return null;
   }
 
-  public ConstructorMirror constructor() {
-    return new ConstructorMirror();
+  public Constructor constructor() {
+    return new Constructor();
   }
 
   public Object create(Object... args) {
     return constructor().create(args);
   }
 
-  public final class ConstructorMirror {
+  public final class Constructor {
     public Object create(Object... args) {
       if (args == null) {
         args = new Object[0];
       }
       Class<?>[] classes = classes(args);
       try {
-        Constructor<?> c = findConstructorMatching(classes).valueE("Matching constructor not found.");
+        java.lang.reflect.Constructor<?> c = findConstructorMatching(classes).valueE("Matching constructor not found.");
         breakChains(c);
         return c.newInstance(args);
       } catch (Exception e) {
@@ -55,17 +54,17 @@ public final class ClassMirror extends Mirror<Class<?>> {
     }
   }
 
-  private Option<Constructor<?>> findConstructorMatching(final Class<?>[] classes) {
-    Array<Constructor<?>> cs = array(type().getDeclaredConstructors());
+  private Option<java.lang.reflect.Constructor<?>> findConstructorMatching(final Class<?>[] classes) {
+    Array<java.lang.reflect.Constructor<?>> cs = array(type().getDeclaredConstructors());
     Array<Class<?>> ks = array(classes);
-    return cs.find(new F<Constructor<?>, Boolean>() {
+    return cs.find(new F<java.lang.reflect.Constructor<?>, Boolean>() {
       @Override
-      public Boolean f(Constructor<?> constructor) {
+      public Boolean f(java.lang.reflect.Constructor<?> constructor) {
         return Arrays.equals(constructor.getParameterTypes(), classes);
       }
-    }).orElse(cs.find(new F<Constructor<?>, Boolean>() {
+    }).orElse(cs.find(new F<java.lang.reflect.Constructor<?>, Boolean>() {
       @Override
-      public Boolean f(Constructor<?> constructor) {
+      public Boolean f(java.lang.reflect.Constructor<?> constructor) {
         return areCompatible(constructor.getParameterTypes(), classes);
       }
     }));

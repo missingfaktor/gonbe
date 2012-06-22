@@ -17,7 +17,7 @@ final class Utils {
   private Utils() {
   }
 
-  public static <M extends Member> boolean isStatic(M member) {
+  public static boolean isStatic(Member member) {
     return Modifier.isStatic(member.getModifiers());
   }
 
