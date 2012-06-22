@@ -192,6 +192,7 @@ public abstract class Mirror<A> {
       Class<?>[] classes = classes(args);
       try {
         java.lang.reflect.Method method = findMethodMatching(classes).valueE("Matching method not found.");
+        breakChains(method);
         return (A) method.invoke(receiver(), args);
       } catch (Exception e) {
         throw new MirroringException(e);
@@ -220,12 +221,6 @@ public abstract class Mirror<A> {
         }
       };
       Option<java.lang.reflect.Method> match = exactMatch.orElse(bestMatch);
-      match.foreach(new Effect<java.lang.reflect.Method>() {
-        @Override
-        public void e(java.lang.reflect.Method method) {
-          breakChains(method);
-        }
-      });
       return match;
     }
 

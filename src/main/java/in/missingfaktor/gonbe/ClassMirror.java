@@ -1,6 +1,7 @@
 package in.missingfaktor.gonbe;
 
 import fj.F;
+import fj.P1;
 import fj.data.Array;
 import fj.data.Option;
 
@@ -49,21 +50,28 @@ public final class ClassMirror extends Mirror<Class<?>> {
         throw new MirroringException(e);
       }
     }
-  }
 
-  private Option<java.lang.reflect.Constructor<?>> findConstructorMatching(final Class<?>[] classes) {
-    Array<java.lang.reflect.Constructor<?>> cs = array(type().getDeclaredConstructors());
-    Array<Class<?>> ks = array(classes);
-    return cs.find(new F<java.lang.reflect.Constructor<?>, Boolean>() {
-      @Override
-      public Boolean f(java.lang.reflect.Constructor<?> constructor) {
-        return Arrays.equals(constructor.getParameterTypes(), classes);
-      }
-    }).orElse(cs.find(new F<java.lang.reflect.Constructor<?>, Boolean>() {
-      @Override
-      public Boolean f(java.lang.reflect.Constructor<?> constructor) {
-        return areCompatible(constructor.getParameterTypes(), classes);
-      }
-    }));
+    private Option<java.lang.reflect.Constructor<?>> findConstructorMatching(final Class<?>[] classes) {
+      final Array<java.lang.reflect.Constructor<?>> cs = array(type().getDeclaredConstructors());
+      Array<Class<?>> ks = array(classes);
+      Option<java.lang.reflect.Constructor<?>> exactMatch = cs.find(new F<java.lang.reflect.Constructor<?>, Boolean>() {
+        @Override
+        public Boolean f(java.lang.reflect.Constructor<?> constructor) {
+          return Arrays.equals(constructor.getParameterTypes(), classes);
+        }
+      });
+      P1<Option<java.lang.reflect.Constructor<?>>> bestMatch = new P1<Option<java.lang.reflect.Constructor<?>>>() {
+        @Override
+        public Option<java.lang.reflect.Constructor<?>> _1() {
+          return cs.find(new F<java.lang.reflect.Constructor<?>, Boolean>() {
+            @Override
+            public Boolean f(java.lang.reflect.Constructor<?> constructor) {
+              return areCompatible(constructor.getParameterTypes(), classes);
+            }
+          });
+        }
+      };
+      return exactMatch.orElse(bestMatch);
+    }
   }
 }
