@@ -189,9 +189,6 @@ public abstract class Mirror<A> {
     }
 
     public <A> A call(Object... args) {
-      if (args == null) {
-        args = new Object[0];
-      }
       Class<?>[] classes = classes(args);
       try {
         java.lang.reflect.Method method = findMethodMatching(classes).valueE("Matching method not found.");

@@ -40,9 +40,6 @@ public final class ClassMirror extends Mirror<Class<?>> {
 
   public final class Constructor {
     public Object create(Object... args) {
-      if (args == null) {
-        args = new Object[0];
-      }
       Class<?>[] classes = classes(args);
       try {
         java.lang.reflect.Constructor<?> c = findConstructorMatching(classes).valueE("Matching constructor not found.");
